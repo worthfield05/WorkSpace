@@ -3,7 +3,7 @@ const getMeAPI = async () => {
   try {
     const res = await API.get("/api/v1/auth/getme");
     return res.data;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

@@ -54,7 +54,7 @@ const RegisterPage = () => {
     onSuccess: (data) => {
       toast.success("User created Successfully");
       queryClient.invalidateQueries({ queryKey: ["me"] });
-      navigate("/");
+      navigate("/workflows");
     },
   });
   const onSubmit = async (values) => {

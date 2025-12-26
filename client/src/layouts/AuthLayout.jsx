@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router";
 
 const AuthLayout = ({ user }) => {
   if (user) {
-    return <Navigate to={"/"} replace />;
+    return <Navigate to={"/workflows"} replace />;
   } else {
     return (
       <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">

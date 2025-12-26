@@ -1,6 +1,7 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
   Route,
   RouterProvider,
 } from "react-router";
@@ -35,8 +36,12 @@ const App = () => {
       <>
         <Route path="/" element={<HomeLayout />}>
           <Route element={<ProtectedLayout user={user} />}>
-            <Route index element={<HomePage />} />
-
+            {/* <Route index element={<HomePage />} /> */}
+            <Route index element={<Navigate to="/workflows" replace />} />
+            <Route path="workflows">
+              <Route index element={<WorkflowPage />} />
+              <Route path=":id" element={<WorkflowDetail />} />
+            </Route>
             <Route path="credentials">
               <Route index element={<CredentialPage />} />
               <Route path=":id" element={<CredentialDetail />} />
@@ -44,10 +49,6 @@ const App = () => {
             <Route path="executions">
               <Route index element={<ExecutionsPage />} />
               <Route path=":id" element={<ExecutionDetail />} />
-            </Route>
-            <Route path="workflows">
-              <Route index element={<WorkflowPage />} />
-              <Route path=":id" element={<WorkflowDetail />} />
             </Route>
           </Route>
 

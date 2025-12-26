@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { logoutAPI } from "../apis/auth";
+import { getMeAPI, logoutAPI } from "../apis/auth";
 import { Button } from "@/components/ui/button";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
-  const { data: user } = useQuery(["me"]);
+  const { data: user } = useQuery({ queryKey: ["me"], queryFn: getMeAPI });
 
   const { mutate } = useMutation({
     mutationFn: logoutAPI,

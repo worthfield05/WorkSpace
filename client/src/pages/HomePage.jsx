@@ -1,18 +1,21 @@
-import { Button, Text } from "@chakra-ui/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { logoutAPI } from "../apis/auth";
+import { Button } from "@/components/ui/button";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
+  const { data: user } = useQuery(["me"]);
+
   const { mutate } = useMutation({
     mutationFn: logoutAPI,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me"] });
     },
   });
+  console.log(user);
   return (
     <div>
-      <Text>Welcome to WorkSpace Application</Text>
+      <h1>Welcome to WorkSpace Application</h1>
       <Button onClick={mutate}>Logout</Button>
     </div>
   );

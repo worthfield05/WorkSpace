@@ -1,7 +1,6 @@
 import {
   createBrowserRouter,
   createRoutesFromElements,
-  Navigate,
   Route,
   RouterProvider,
 } from "react-router";
@@ -12,41 +11,50 @@ import HomePage from "./pages/HomePage";
 import { useQuery } from "@tanstack/react-query";
 import { getMeAPI } from "./apis/auth";
 import ProtectedLayout from "./layouts/ProtectedLayout";
+import CredentialPage from "./pages/CredentialPage";
+import CredentialDetail from "./components/Credential/CredentialDetail";
+import AuthLayout from "./layouts/AuthLayout";
+import ExecutionsPage from "./pages/ExecutionsPage";
+import ExecutionDetail from "./components/Execution/ExecutionDetail";
+import WorkflowPage from "./pages/WorkflowPage";
+import WorkflowDetail from "./components/Workflow/WorkflowDetail";
 
 const App = () => {
-  const query = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ["me"],
     queryFn: getMeAPI,
     retry: false,
     staleTime: 0,
   });
+
+  if (isLoading) {
+    return <div>Checking authentication....</div>;
+  }
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path="/" element={<HomeLayout />}>
-          <Route
-            element={
-              query.data !== null ? (
-                <ProtectedLayout />
-              ) : (
-                <Navigate to={"login"} />
-              )
-            }
-          >
+          <Route element={<ProtectedLayout user={user} />}>
             <Route index element={<HomePage />} />
+
+            <Route path="credentials">
+              <Route index element={<CredentialPage />} />
+              <Route path=":id" element={<CredentialDetail />} />
+            </Route>
+            <Route path="executions">
+              <Route index element={<ExecutionsPage />} />
+              <Route path=":id" element={<ExecutionDetail />} />
+            </Route>
+            <Route path="workflows">
+              <Route index element={<WorkflowPage />} />
+              <Route path=":id" element={<WorkflowDetail />} />
+            </Route>
           </Route>
-          <Route
-            path="login"
-            element={
-              query.data === null ? <LoginPage /> : <Navigate to={"/"} />
-            }
-          />
-          <Route
-            path="register"
-            element={
-              query.data === null ? <RegisterPage /> : <Navigate to={"/"} />
-            }
-          />
+
+          <Route element={<AuthLayout user={user} />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+          </Route>
         </Route>
       </>
     )

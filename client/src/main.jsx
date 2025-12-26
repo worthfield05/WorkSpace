@@ -9,9 +9,7 @@ import App from "./App";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Provider>
-        <App />
-      </Provider>
+      <App />
     </QueryClientProvider>
   </StrictMode>
 );

@@ -3,8 +3,11 @@ const getMeAPI = async () => {
   try {
     const res = await API.get("/api/v1/auth/getme");
     return res.data;
-  } catch {
-    return null;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      return null;
+    }
+    throw error;
   }
 };
 const loginAPI = async (payload) => {

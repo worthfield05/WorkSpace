@@ -9,6 +9,7 @@ const errorMiddleware = require("./middlewares/error.middleware");
 const authRoute = require("./routes/auth.route");
 const aiRoute = require("./routes/ai.route");
 const inngestRoute = require("./routes/inngest.route");
+const workflowRoute = require("./routes/workflow.route");
 const { inngest } = require("./inngest/client");
 const { functions } = require("./inngest/functions");
 
@@ -34,6 +35,7 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/inngest", inngestRoute);
 app.use("/api/v1/ai", aiRoute);
+app.use("/api/v1/workflow", workflowRoute);
 
 app.use(errorMiddleware);
 module.exports = app;

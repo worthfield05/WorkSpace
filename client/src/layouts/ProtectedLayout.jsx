@@ -1,5 +1,6 @@
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { WorkflowsContainer } from "@/pages/WorkflowPage";
 import React from "react";
 import { Navigate, Outlet } from "react-router";
 
@@ -9,7 +10,9 @@ const ProtectedLayout = ({ user }) => {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
-          <Outlet />
+          <WorkflowsContainer>
+            <Outlet />
+          </WorkflowsContainer>
         </SidebarInset>
       </SidebarProvider>
     );

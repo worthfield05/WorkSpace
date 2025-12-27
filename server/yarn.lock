@@ -3302,6 +3302,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"random-word-slugs@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "random-word-slugs@npm:0.1.7"
+  checksum: 10c0/452c1829d63110fa58fc7d63c8187c82bf38e34b6a5273bc0a7fbfd415536bb304254c31391d55f3b39fbadec8bbb5120fe1f0e256a49fd9259044772144e69b
+  languageName: node
+  linkType: hard
+
 "range-parser@npm:^1.2.1":
   version: 1.2.1
   resolution: "range-parser@npm:1.2.1"
@@ -3454,6 +3461,7 @@ __metadata:
     mongoose: "npm:^9.0.0"
     morgan: "npm:^1.10.1"
     nodemon: "npm:^3.1.11"
+    random-word-slugs: "npm:^0.1.7"
     xss-clean: "npm:^0.1.4"
     zod: "npm:^4.2.1"
   languageName: unknown

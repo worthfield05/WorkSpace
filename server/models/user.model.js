@@ -21,6 +21,18 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.virtual("workflows", {
+  ref: "Workflow",
+  localField: "_id",
+  foreignField: "userId",
+});
+
+userSchema.pre("findOneAndDelete", async function (next) {
+  const userId = this.getQuery()._id;
+  await mongoose.model("Workflow").deleteMany({ userId });
+  next();
+});
+
 userSchema.methods.encryptPassword = function (plainText) {
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(plainText, salt);

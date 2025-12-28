@@ -1,0 +1,14 @@
+const ApiError = require("../utils/errorHandler");
+
+exports.validate =
+  (schema, property = "body") =>
+  (req, res, next) => {
+    const result = schema.safeParse(req[property]);
+    if (!result.success) {
+      return next(
+        new ApiError(400, "Validation failed", result.error.flatten())
+      );
+    }
+    req[property] = result.data;
+    next();
+  };

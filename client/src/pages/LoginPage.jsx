@@ -1,7 +1,6 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 
@@ -23,10 +22,9 @@ import {
 import { Input } from "@/components/ui/input";
 // import { cn } from "@lib/utils";
 import { Link } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginAPI } from "@/apis/auth";
+import { useLogin } from "@/hooks/auth/useLogin";
+import { applyServerErrors } from "@/lib/errorHandler";
 const LoginPage = () => {
-  const queryClient = useQueryClient();
   const loginSchema = z.object({
     email: z.string().email("Enter a valid email address"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -38,19 +36,15 @@ const LoginPage = () => {
       password: "",
     },
   });
-  const { mutateAsync, error, isError } = useMutation({
-    mutationFn: async (values) => {
-      await loginAPI(values);
-    },
-    onSuccess: (data) => {
-      toast.success("Login successfully");
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-    },
-  });
+  const { mutateAsync: login, isPending, isError, error } = useLogin();
+
   const onSubmit = async (values) => {
-    await mutateAsync(values);
+    try {
+      await login(values);
+    } catch (error) {
+      applyServerErrors(error, form);
+    }
   };
-  const isPending = form.formState.isSubmitting;
 
   return (
     <div className="flex flex-col gap-6">
@@ -142,7 +136,7 @@ const LoginPage = () => {
                     className={"w-full"}
                     disabled={isPending}
                   >
-                    Login
+                    {isPending ? "Logging in..." : "Login"}
                   </Button>
                 </div>
                 <div className="text-center text-sm">

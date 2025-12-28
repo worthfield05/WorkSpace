@@ -1,14 +1,10 @@
 const { authService } = require("../services/auth.service");
-const ApiError = require("../utils/errorHandler");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
 const signup = async (req, res, next) => {
   try {
-    const { email, password } = req.body || {};
-    if (!email || !password) {
-      next(ApiError(400, "All fields are required"));
-    }
+    const { email, password } = req.body;
     const data = await authService.signup({ email, password });
     const token = jwt.sign({ _id: data._id }, config.JWT_SECRET_KEY, {
       expiresIn: "7d",
@@ -27,11 +23,7 @@ const signup = async (req, res, next) => {
 };
 const login = async (req, res, next) => {
   try {
-    console.log(req.body);
-    const { email, password } = req.body || {};
-    if (!email && !password) {
-      return next(ApiError(400, "All fields are required."));
-    }
+    const { email, password } = req.body;
     const data = await authService.login({ email, password });
     const token = jwt.sign({ _id: data._id }, config.JWT_SECRET_KEY, {
       expiresIn: "7d",

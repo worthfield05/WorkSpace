@@ -11,16 +11,16 @@ const getMeAPI = async () => {
   }
 };
 const loginAPI = async (payload) => {
-  const data = await API.post("/api/v1/auth/login", payload);
-  return data.response;
+  const res = await API.post("/api/v1/auth/login", payload);
+  return res.data;
 };
 const registerAPI = async (payload) => {
   console.log(payload);
-  const data = await API.post("/api/v1/auth/signup", payload);
-  return data.response;
+  const res = await API.post("/api/v1/auth/signup", payload);
+  return res.data;
 };
 const logoutAPI = async () => {
-  const data = await API.post("/api/v1/auth/logout");
-  return data.response;
+  const res = await API.post("/api/v1/auth/logout");
+  return res.data;
 };
 export { getMeAPI, registerAPI, loginAPI, logoutAPI };

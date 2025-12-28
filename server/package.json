@@ -3,7 +3,8 @@
   "packageManager": "yarn@4.9.1",
   "scripts": {
     "dev": "nodemon server.js",
-    "inngest": "inngest dev"
+    "inngest": "inngest dev",
+    "test": "nodemon test.js"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"

@@ -1,7 +1,6 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 
@@ -22,13 +21,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 // import { cn } from "@lib/utils";
-import { Link, useNavigate } from "react-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { registerAPI } from "@/apis/auth";
+import { Link } from "react-router";
+import { useRegister } from "@/hooks/auth/useRegister";
+import { applyServerErrors } from "@/lib/errorHandler";
 
 const RegisterPage = () => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const registerSchema = z
     .object({
       email: z.string().email("Enter a valid email address"),
@@ -47,20 +44,15 @@ const RegisterPage = () => {
       confirmPassword: "",
     },
   });
-  const { mutateAsync, isError, error } = useMutation({
-    mutationFn: async (values) => {
-      await registerAPI(values);
-    },
-    onSuccess: (data) => {
-      toast.success("User created Successfully");
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-      navigate("/workflows");
-    },
-  });
+
+  const { mutateAsync: register, isPending, isError, error } = useRegister();
   const onSubmit = async (values) => {
-    await mutateAsync(values);
+    try {
+      await register(values);
+    } catch (error) {
+      applyServerErrors(error, form);
+    }
   };
-  const isPending = form.formState.isSubmitting;
   return (
     <div className="flex flex-col gap-6">
       <Card>
@@ -162,7 +154,7 @@ const RegisterPage = () => {
                     <div className="text-center text-sm">
                       {error?.response?.data?.message ||
                         error?.message ||
-                        "Login failed"}
+                        "Registration failed"}
                     </div>
                   )}
                   <Button
@@ -170,7 +162,7 @@ const RegisterPage = () => {
                     className={"w-full"}
                     disabled={isPending}
                   >
-                    Sign up
+                    {isPending ? "Creating account..." : "Sign up"}
                   </Button>
                 </div>
                 <div className="text-center text-sm">

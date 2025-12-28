@@ -4,10 +4,9 @@ const ApiError = require("../utils/errorHandler");
 const mongoose = require("mongoose");
 const create = async (req, res, next) => {
   try {
-    const user = req.user;
     const newWorkflow = new Workflow({
       name: generateSlug(3),
-      userId: user._id,
+      userId: req.user._id,
     });
     await newWorkflow.save();
     return res.status(201).json(newWorkflow);
@@ -25,33 +24,26 @@ const list = async (req, res, next) => {
 };
 const remove = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(ApiError(400, "Invalid workflow id"));
-    }
     const workflow = await Workflow.findOneAndDelete({
-      _id: id,
+      _id: req.params.id,
       userId: req.user._id,
     });
     if (!workflow) {
-      return next(ApiError(404, "Workflow not found"));
+      throw new ApiError(404, "Workflow not found");
     }
-    return res
-      .status(200)
-      .json({ message: "Workflow deleted", data: workflow });
+    return res.status(200).json(workflow);
   } catch (error) {
     next(error);
   }
 };
 const singleWorkflow = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(ApiError(400, "Invalid workflow id"));
-    }
-    const workflow = await Workflow.findOne({ _id: id, userId: req.user._id });
+    const workflow = await Workflow.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    });
     if (!workflow) {
-      return next(ApiError(404, "Workflow not found"));
+      throw new ApiError(404, "Workflow not found");
     } else {
       return res.status(200).json(workflow);
     }
@@ -61,31 +53,20 @@ const singleWorkflow = async (req, res, next) => {
 };
 const update = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const { name } = req.body;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return next(ApiError(400, "Invalid workflow id"));
-    }
-    if (!name || !name.trim()) {
-      return next(ApiError(400, "Please enter workflow name"));
-    }
-
     const workflow = await Workflow.findOneAndUpdate(
       {
-        _id: id,
+        _id: req.params.id,
         userId: req.user._id,
       },
       {
-        name: name.trim(),
+        name: req.body.name,
       },
       { new: true }
     );
     if (!workflow) {
-      return next(ApiError(404, "Workflow not found"));
+      throw new ApiError(404, "Workflow not found");
     }
-    return res
-      .status(200)
-      .json({ message: "Workflow updated successfully", data: workflow });
+    return res.status(200).json(workflow);
   } catch (error) {
     next(error);
   }

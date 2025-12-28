@@ -13,7 +13,7 @@ exports.authService = {
   login: async (obj) => {
     const validEmail = await User.findOne({ email: obj.email });
     if (!validEmail || !(await validEmail.matchPassword(obj.password))) {
-      throw ApiError(400, "Invalid email or password");
+      throw new ApiError(400, "Invalid email or password");
     }
     return validEmail;
   },
